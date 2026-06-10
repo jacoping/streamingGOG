@@ -1,0 +1,11 @@
+// ============================================================
+// SETTINGS
+// ============================================================
+
+// Soglia redirect: dopo ogni video viene generato un numero
+// random tra 0 e 1. Se è maggiore di questo valore, la pagina
+// reindirizza su index.html. (0 = sempre, 1 = mai)
+var REDIRECT_THRESHOLD = 0.4;
+
+// Secondi prima che index.html ritorni su videos/play.html
+var REDIRECT_SECONDS = 2;
