@@ -5,10 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>StreamingGOG</title>
+  <title>Project 2 in Eco-Social Design - Summer 2026</title>
   <style type="text/css">
-    /* Reset base */
-    body, h1, h2, p {
+    body, h1, p, ul, li {
       margin: 0;
       padding: 0;
     }
@@ -27,74 +26,46 @@
       padding: 40px 20px 60px 20px;
     }
 
-    h1 {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 52px;
-      font-weight: bold;
-      color: #f0c040;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      padding-bottom: 16px;
-    }
-
-    h2 {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 20px;
-      font-weight: normal;
-      color: #a0b4cc;
-      letter-spacing: 1px;
-      padding-top: 8px;
-    }
-
-    hr {
-      border: 0;
-      border-top: 1px solid #3a3a5a;
-      width: 60%;
-      margin: 40px auto;
-    }
-
     video {
       width: 100%;
       max-width: 1540px;
       border-radius: 6px;
-      margin-top: 30px;
       background: #000;
       box-shadow: 0 4px 24px rgba(0,0,0,0.5);
     }
 
-    .video-label {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 13px;
+    ul.playlist li .num {
       color: #5a6a7a;
-      margin-top: 10px;
-    }
-
-    #btn-fullscreen {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 8px 22px;
-      background: #f0c040;
-      color: #1a1a2e;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 14px;
-      font-weight: bold;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    #btn-fullscreen:hover {
-      background: #ffd966;
+      margin-right: 8px;
     }
   </style>
 </head>
 <body>
   <div id="wrapper">
-    <video id="player" controls preload="metadata">
-      <source src="test.mp4" type="video/mp4">
+    <video id="player" controls preload="metadata" onended="autoNext()">
       Il tuo browser non supporta il tag video HTML5.
     </video>
-    <br>
   </div>
+
+  <script type="text/javascript">
+    var playlist = ['test.mp4', 'test2.mp4', 'test3.mp4', 'test4.mp4'];
+    var current = 0;
+    var player = document.getElementById('player');
+
+    function autoNext() {
+      var next = (current + 1) % playlist.length;
+      playItem(next);
+    }
+
+    function playItem(index) {
+      current = index;
+      player.src = playlist[current];
+      player.load();
+      player.play();
+    }
+
+    // Carica il primo video
+    player.src = playlist[0];
+  </script>
 </body>
 </html>
