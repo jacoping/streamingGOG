@@ -12,6 +12,10 @@
       padding: 0;
     }
 
+    html, body {
+      overflow: hidden;
+    }
+
     body {
       background-color: #1a1a2e;
       color: #e0e0e0;
@@ -23,12 +27,14 @@
       width: 95%;
       max-width: 1580px;
       margin: 0 auto;
-      padding: 40px 20px 60px 20px;
+      padding: 0;
     }
 
     video {
+      display: block;
       width: 100%;
       max-width: 1540px;
+      max-height: 986px;
       border-radius: 6px;
       background: #000;
       box-shadow: 0 4px 24px rgba(0,0,0,0.5);
@@ -42,7 +48,7 @@
 </head>
 <body>
   <div id="wrapper">
-    <video id="player" controls preload="metadata" onended="autoNext()">
+    <video id="player" controls preload="auto" autoplay onended="autoNext()">
       Il tuo browser non supporta il tag video HTML5.
     </video>
   </div>
@@ -64,8 +70,10 @@
       player.play();
     }
 
-    // Carica il primo video
+    // Carica e avvia il primo video
     player.src = playlist[0];
+    player.load();
+    player.play();
   </script>
 </body>
 </html>
