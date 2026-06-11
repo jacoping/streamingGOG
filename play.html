@@ -49,15 +49,22 @@
     </video>
   </div>
 
-  <script type="text/javascript" src="../settings.js"></script>
+  <script type="text/javascript" src="settings.js"></script>
+  <script type="text/javascript" src="videos/videolist.js"></script>
   <script type="text/javascript">
-    var playlist = ['test.mp4', 'test2.mp4', 'test3.mp4', 'test4.mp4', 'test5.mp4'];
+    var playlist = (function() {
+      var i, out = [];
+      for (i = 0; i < PLAYLIST.length; i++) {
+        out.push('videos/' + PLAYLIST[i]);
+      }
+      return out;
+    }());
     var current = 0;
     var player = document.getElementById('player');
 
     function autoNext() {
       if (Math.random() > REDIRECT_THRESHOLD) {
-        window.location.href = '../index.html';
+        window.location.href = 'index.html';
         return;
       }
       var next;
