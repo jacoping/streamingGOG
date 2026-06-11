@@ -1,5 +1,7 @@
 videos/
+testvideos/
 .DS_Store
+*/.DS_Store
 
 
 
