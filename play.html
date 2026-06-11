@@ -50,7 +50,7 @@
       background: rgba(0,0,0,0.55);
       padding: 2px 6px;
       border-radius: 2px;
-      pointer-events: none;
+      pointer-events: none; /* note: ignored in Safari 5.1 on HTML elements */
       z-index: 999;
     }
 
@@ -77,16 +77,40 @@
     var current = 0;
     var player = document.getElementById('player');
 
+    var checkCount = 0;
+    var autoNextBusy = false;
+
     function autoNext() {
-      if (Math.random() > REDIRECT_THRESHOLD) {
-        window.location.href = 'index.html';
-        return;
-      }
-      var next;
-      do {
-        next = Math.floor(Math.random() * playlist.length);
-      } while (next === current && playlist.length > 1);
-      playItem(next);
+      if (autoNextBusy) { return; }
+      autoNextBusy = true;
+      var xhr = new XMLHttpRequest();
+      var abortTimer = setTimeout(function() {
+        xhr.abort();
+        autoNextBusy = false;
+        setTimeout(autoNext, 60000); // server unreachable - retry in 1 min
+      }, 5000);
+      xhr.open('GET', 'check?n=' + (++checkCount), true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          clearTimeout(abortTimer);
+          autoNextBusy = false;
+          if (xhr.status === 200) {
+            // server available - proceed normally
+            if (Math.random() > REDIRECT_THRESHOLD) {
+              window.location.href = 'index.html';
+              return;
+            }
+            var next;
+            do {
+              next = Math.floor(Math.random() * playlist.length);
+            } while (next === current && playlist.length > 1);
+            playItem(next);
+          } else {
+            setTimeout(autoNext, 60000); // server unreachable - retry in 1 min
+          }
+        }
+      };
+      try { xhr.send(null); } catch(e) { autoNextBusy = false; setTimeout(autoNext, 60000); }
     }
 
     function playItem(index) {
@@ -97,6 +121,9 @@
       var name = playlist[current].replace('videos/', '').replace(/.*\//, '');
       if (DEBUG) { document.getElementById('filetag').innerHTML = name; }
     }
+
+    // Every TIMEOUT_SECONDS, trigger autoNext (which checks server availability)
+    setInterval(autoNext, TIMEOUT_SECONDS * 1000);
 
     // Carica e avvia un video a caso
     current = Math.floor(Math.random() * playlist.length);

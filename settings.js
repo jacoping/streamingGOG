@@ -12,3 +12,6 @@ var REDIRECT_THRESHOLD = 0.4;
 
 // Secondi prima che index.html ritorni su videos/play.html
 var REDIRECT_SECONDS = 8;
+
+// Secondi di inattività prima che play.html si auto-refreshi
+var TIMEOUT_SECONDS = 60;
