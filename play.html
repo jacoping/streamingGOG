@@ -40,10 +40,25 @@
       box-shadow: 0 4px 24px rgba(0,0,0,0.5);
     }
 
+    #filetag {
+      position: fixed;
+      top: 8px;
+      right: 10px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,0.45);
+      background: rgba(0,0,0,0.55);
+      padding: 2px 6px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 999;
+    }
+
   </style>
 </head>
 <body>
   <div id="wrapper">
+    <div id="filetag"></div>
     <video id="player" controls preload="auto" autoplay onended="autoNext()">
       Il tuo browser non supporta il tag video HTML5.
     </video>
@@ -79,6 +94,8 @@
       player.src = playlist[current];
       player.load();
       player.play();
+      var name = playlist[current].replace('videos/', '').replace(/.*\//, '');
+      if (DEBUG) { document.getElementById('filetag').innerHTML = name; }
     }
 
     // Carica e avvia un video a caso
@@ -86,6 +103,8 @@
     player.src = playlist[current];
     player.load();
     player.play();
+    var initName = playlist[current].replace('videos/', '').replace(/.*\//, '');
+    if (DEBUG) { document.getElementById('filetag').innerHTML = initName; }
   </script>
 </body>
 </html>
