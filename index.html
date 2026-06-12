@@ -34,6 +34,31 @@
                    '#FF6600','#0066FF','#CC00FF','#00FFCC','#FF3300','#FF9900','#00FF99','#FF0099','#66FF00','#FF66FF','#00CCFF'];
     var shapes = [];
 
+    /* name lists for ticker lines T4 and T5 */
+    var NAMES_A = ['Alessandra Capuano','Luca Collignan','Belén Pérez González',
+                   'Louis Steinhauser','Thore Flynn Hadré','Franziska Fröstl',
+                   'Julia Gómez de Frutos','Flavia Padulano','Alessia Zanotti',
+                   'Luca Toscano','David Schwarzfeld','Wentao Lu',
+                   'Johanna Cepeda Hess','Sophie Louise Meyer','Shreya Deshpande',
+                   'Paula Götz','Lina Korneffel','Marieke Schäfer','Ella Stauber',
+                   'Elena Galvani','Beatrice Guerra','Anna Pitton','Tommaso Sottopietra',
+                   'Giulia Galli','Laura Kalser','Alessia Piscioli','Adriana Sotomayor',
+                   'Anaël Eliot Arthur','Aparna Gomathi Nataraja Pandian',
+                   'Carlota Salvador Coutinho Coelho da Silva Portela','Dide Su Unluakin'];
+    var NAMES_B = ['SozGym FoTour','EURAC','BASIS','Kunst Merano Arte','Comune di Trento',
+                   'Shifton','Jugenddienst Merano','Forum Prevenzione','kaleido:coop'];
+
+    function shuffle(arr) {
+      var a = arr.slice(), i, j, t;
+      for (i = a.length - 1; i > 0; i--) {
+        j = rnd(i + 1);
+        t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+      return a;
+    }
+
+    function buildNames(arr) { return shuffle(arr).join(', ').toUpperCase() + '  '; }
+
     /* scrolling text state */
     var T1 = 'PROJECT 2 IN ECO-SOCIAL DESIGN';
     var T2 = 'IN THE FIELD';
@@ -58,6 +83,14 @@
     var t2GlowA = '#00FF41';
     var t2GlowB = '#FFFF00';
 
+    /* small fast ticker lines */
+    var T3 = 'MARCH 3RD — JUNE 12TH 2026';
+    var T4 = '';
+    var T5 = '';
+    var t3X = 0, t3Y = 0, t3Speed = 4.5 + Math.random() * 3.0, t3Color = '#00FFFF';
+    var t4X = 0, t4Y = 0, t4Speed = 5.0 + Math.random() * 4.0, t4Color = '#FFFF00';
+    var t5X = 0, t5Y = 0, t5Speed = 4.0 + Math.random() * 3.5, t5Color = '#FF00FF';
+
     function resize() {
       W = canvas.width = window.innerWidth || document.documentElement.clientWidth;
       H = canvas.height = window.innerHeight || document.documentElement.clientHeight;
@@ -65,6 +98,12 @@
       t1Y = Math.round(H * 0.15 + Math.random() * H * 0.7);
       t2X = Math.round(Math.random() * W);
       t2Y = Math.round(H * 0.15 + Math.random() * H * 0.7);
+      t3X = Math.round(Math.random() * W);
+      t3Y = Math.round(H * 0.04 + Math.random() * H * 0.92);
+      t4X = Math.round(Math.random() * W);
+      t4Y = Math.round(H * 0.04 + Math.random() * H * 0.92);
+      t5X = Math.round(Math.random() * W);
+      t5Y = Math.round(H * 0.04 + Math.random() * H * 0.92);
     }
 
     function rnd(n) { return Math.floor(Math.random() * n); }
@@ -103,6 +142,14 @@
       t1Y = Math.round(H * 0.15 + Math.random() * H * 0.7);
       t2X = Math.round(Math.random() * W);
       t2Y = Math.round(H * 0.15 + Math.random() * H * 0.7);
+      t3X = Math.round(Math.random() * W);
+      t3Y = Math.round(H * 0.04 + Math.random() * H * 0.92);
+      T4 = buildNames(NAMES_A);
+      t4X = W; /* start off right edge so it scrolls in cleanly */
+      t4Y = Math.round(H * 0.04 + Math.random() * H * 0.92);
+      T5 = buildNames(NAMES_B);
+      t5X = W;
+      t5Y = Math.round(H * 0.04 + Math.random() * H * 0.92);
       pickTextColors();
       var i;
       for (i = 0; i < 60; i++) {
@@ -250,11 +297,18 @@
     function drawText() {
       var fs1 = Math.max(30, Math.round(H / 5));
       var fs2 = Math.max(40, Math.round(H / 3.5));
+      var fs3 = Math.max(22, Math.round(H / 11));  /* date ticker — larger */
+      var fs4 = Math.max(11, Math.round(H / 22));  /* names ticker — small */
       var font1 = 'bold ' + fs1 + 'px Impact, "Arial Black", Arial, sans-serif';
       var font2 = 'bold ' + fs2 + 'px Impact, "Arial Black", Arial, sans-serif';
+      var font3 = 'bold ' + fs3 + 'px Impact, "Arial Black", Arial, sans-serif';
+      var font4 = 'bold ' + fs4 + 'px Impact, "Arial Black", Arial, sans-serif';
 
       ctx.save(); ctx.font = font1; var tw1 = ctx.measureText(T1).width; ctx.restore();
       ctx.save(); ctx.font = font2; var tw2 = ctx.measureText(T2).width; ctx.restore();
+      ctx.save(); ctx.font = font3; var tw3 = ctx.measureText(T3).width; ctx.restore();
+      ctx.save(); ctx.font = font4; var tw4 = ctx.measureText(T4).width; ctx.restore();
+      ctx.save(); ctx.font = font4; var tw5 = ctx.measureText(T5).width; ctx.restore();
 
       /* advance T1 */
       t1X -= t1Speed;
@@ -276,6 +330,35 @@
         t2BaseColor = COLORS[rnd(COLORS.length)];
         t2GlowA = COLORS[rnd(COLORS.length)];
         t2GlowB = COLORS[rnd(COLORS.length)];
+      }
+
+      /* advance T3 (date) */
+      t3X -= t3Speed;
+      if (t3X + tw3 < 0) {
+        t3X = W + Math.round(Math.random() * W * 0.5); /* random gap before reappearing */
+        t3Y = Math.round(H * 0.04 + Math.random() * H * 0.92);
+        t3Speed = 4.5 + Math.random() * 3.0;
+        t3Color = COLORS[rnd(COLORS.length)];
+      }
+
+      /* advance T4 (names A) — reshuffle on each full pass */
+      t4X -= t4Speed;
+      if (t4X + tw4 < 0) {
+        T4 = buildNames(NAMES_A);
+        t4X = W + Math.round(Math.random() * W * 0.3);
+        t4Y = Math.round(H * 0.04 + Math.random() * H * 0.92);
+        t4Speed = 5.0 + Math.random() * 4.0;
+        t4Color = COLORS[rnd(COLORS.length)];
+      }
+
+      /* advance T5 (names B) — reshuffle on each full pass */
+      t5X -= t5Speed;
+      if (t5X + tw5 < 0) {
+        T5 = buildNames(NAMES_B);
+        t5X = W + Math.round(Math.random() * W * 0.3);
+        t5Y = Math.round(H * 0.04 + Math.random() * H * 0.92);
+        t5Speed = 4.0 + Math.random() * 3.5;
+        t5Color = COLORS[rnd(COLORS.length)];
       }
 
       /* random hide triggers */
@@ -330,6 +413,21 @@
         ctx.textBaseline = 'alphabetic';
         ctx.fillText(T2, Math.round(t2X) + gx2, Math.round(t2Y)); ctx.restore();
       }
+
+      /* --- T3: date line --- */
+      ctx.save(); ctx.globalAlpha = 0.75; ctx.fillStyle = t3Color; ctx.font = font3;
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(T3, Math.round(t3X), Math.round(t3Y)); ctx.restore();
+
+      /* --- T4: names A --- */
+      ctx.save(); ctx.globalAlpha = 0.65; ctx.fillStyle = t4Color; ctx.font = font4;
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(T4, Math.round(t4X), Math.round(t4Y)); ctx.restore();
+
+      /* --- T5: names B --- */
+      ctx.save(); ctx.globalAlpha = 0.65; ctx.fillStyle = t5Color; ctx.font = font4;
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(T5, Math.round(t5X), Math.round(t5Y)); ctx.restore();
     }
 
     function update() {
