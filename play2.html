@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="it">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project 2 in Eco-Social Design - Summer 2026</title>
+  <style type="text/css">
+    body, h1, p, ul, li {
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      overflow: hidden;
+    }
+
+    body {
+      background-color: #1a1a2e;
+      color: #e0e0e0;
+      font-family: Georgia, "Times New Roman", Times, serif;
+      text-align: center;
+    }
+
+    #wrapper {
+      width: 95%;
+      max-width: 1580px;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      max-width: 1580px;
+      max-height: 986px;
+      border-radius: 6px;
+      background: #000;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+
+    /* filename tag — larger and more visible than play.html */
+    #filetag {
+      position: fixed;
+      top: 14px;
+      right: 16px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 18px;
+      color: rgba(255,255,255,0.80);
+      background: rgba(0,0,0,0.65);
+      padding: 5px 12px;
+      border-radius: 4px;
+      z-index: 999;
+    }
+
+    /* prev / next controls */
+    #controls {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      z-index: 999;
+      /* IE / Safari 5.1 compatible centering via negative margin */
+      width: 200px;
+      margin-left: -100px;
+    }
+
+    #controls button {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+      background: rgba(0,0,0,0.70);
+      border: 2px solid rgba(255,255,255,0.55);
+      border-radius: 4px;
+      padding: 8px 24px;
+      cursor: pointer;
+      margin: 0 6px;
+    }
+
+    #controls button:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* index counter */
+    #counter {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      width: 80px;
+      margin-left: -40px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+      color: rgba(255,255,255,0.50);
+      text-align: center;
+      z-index: 998;
+      margin-top: 46px;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <video id="player" controls preload="auto" autoplay onended="nextVideo()">
+      Il tuo browser non supporta il tag video HTML5.
+    </video>
+  </div>
+
+  <div id="filetag"></div>
+
+  <div id="controls">
+    <button onclick="prevVideo()">&#9664;&#9664;</button>
+    <button onclick="nextVideo()">&#9654;&#9654;</button>
+  </div>
+
+  <div id="counter"></div>
+
+  <script type="text/javascript" src="settings.js"></script>
+  <script type="text/javascript" src="videos/videolist.js"></script>
+  <script type="text/javascript">
+    var playlist = (function() {
+      var i, out = [];
+      for (i = 0; i < PLAYLIST.length; i++) {
+        out.push('videos/' + PLAYLIST[i]);
+      }
+      return out;
+    }());
+
+    var current = 0;
+    var player  = document.getElementById('player');
+
+    function updateTag() {
+      var name = playlist[current].replace('videos/', '').replace(/.*\//, '');
+      document.getElementById('filetag').innerHTML  = name;
+      document.getElementById('counter').innerHTML  = (current + 1) + ' / ' + playlist.length;
+    }
+
+    function playItem(index) {
+      current = (index + playlist.length) % playlist.length; /* wrap around */
+      player.src = playlist[current];
+      player.load();
+      player.play();
+      updateTag();
+    }
+
+    function nextVideo() {
+      playItem(current + 1);
+    }
+
+    function prevVideo() {
+      playItem(current - 1);
+    }
+
+    /* start at first item */
+    playItem(0);
+  </script>
+</body>
+</html>
